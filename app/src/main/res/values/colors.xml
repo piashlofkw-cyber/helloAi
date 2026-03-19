@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Brand Colors -->
+    <color name="primary">#00E5FF</color>
+    <color name="primary_dark">#00B8D4</color>
+    <color name="primary_light">#62EFFF</color>
+    
+    <!-- Accent Colors -->
+    <color name="accent">#FF4081</color>
+    <color name="accent_light">#FF79B0</color>
+    
+    <!-- Background Colors -->
+    <color name="background">#0A0E27</color>
+    <color name="background_secondary">#151A30</color>
+    <color name="surface">#1E2538</color>
+    <color name="surface_elevated">#2A3148</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B0BEC5</color>
+    <color name="text_disabled">#546E7A</color>
+    
+    <!-- Status Colors -->
+    <color name="success">#00E676</color>
+    <color name="warning">#FFD600</color>
+    <color name="error">#FF1744</color>
+    <color name="info">#00B0FF</color>
+    
+    <!-- AI Avatar Colors -->
+    <color name="avatar_glow">#00E5FF</color>
+    <color name="avatar_border">#00B8D4</color>
+    
+    <!-- Glassmorphism -->
+    <color name="glass_background">#1AFFFFFF</color>
+    <color name="glass_border">#33FFFFFF</color>
+    
+    <!-- Base Colors -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
+</resources>
