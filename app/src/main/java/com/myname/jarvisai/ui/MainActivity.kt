@@ -98,11 +98,22 @@ class MainActivity : AppCompatActivity() {
     private fun initializeAI() {
         lifecycleScope.launch {
             try {
+                val provider = prefsManager.getAiProvider()
                 val groqKey = prefsManager.getGroqApiKey()
+                val openRouterKey = prefsManager.getOpenRouterApiKey()
                 val elevenLabsKey = prefsManager.getElevenLabsApiKey()
 
-                if (groqKey.isNotEmpty()) {
-                    groqClient = GroqClient(groqKey)
+                when (provider) {
+                    PreferencesManager.PROVIDER_GROQ -> {
+                        if (groqKey.isNotEmpty()) {
+                            groqClient = GroqClient(groqKey)
+                        }
+                    }
+                    PreferencesManager.PROVIDER_OPENROUTER -> {
+                        if (openRouterKey.isNotEmpty()) {
+                            openRouterClient = OpenRouterClient(openRouterKey)
+                        }
+                    }
                 }
 
                 if (elevenLabsKey.isNotEmpty()) {
@@ -172,8 +183,21 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
+                val provider = prefsManager.getAiProvider()
+                val model = prefsManager.getAiModel()
+                
                 val response = withContext(Dispatchers.IO) {
-                    groqClient?.sendMessage(userMessage) ?: "Please configure your API keys in settings"
+                    when (provider) {
+                        PreferencesManager.PROVIDER_GROQ -> {
+                            groqClient?.sendMessage(userMessage, model = model) 
+                                ?: "Please configure Groq API key in settings"
+                        }
+                        PreferencesManager.PROVIDER_OPENROUTER -> {
+                            openRouterClient?.sendMessage(userMessage, model = model)
+                                ?: "Please configure OpenRouter API key in settings"
+                        }
+                        else -> "Please configure your AI provider in settings"
+                    }
                 }
 
                 binding.responseText.append("\n\nJarvis: $response")
@@ -239,6 +263,15 @@ class MainActivity : AppCompatActivity() {
                     micButton.isEnabled = true
                 }
             }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        speechRecognizer?.destroy()
+    }
+}
+        }
         }
     }
 

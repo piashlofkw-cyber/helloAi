@@ -108,7 +108,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="16dp"
             android:hint="@string/wake_word"
             app:boxBackgroundColor="@color/surface"
             app:boxBackgroundMode="filled">
@@ -118,6 +118,53 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/default_wake_word"
+                android:textColor="@color/text_primary" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Model Selection Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="AI Model Selection"
+            android:textColor="@color/primary"
+            android:textSize="20sp" />
+
+        <!-- AI Provider Selection -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="AI Provider"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            app:boxBackgroundColor="@color/surface">
+
+            <AutoCompleteTextView
+                android:id="@+id/aiProviderDropdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textColor="@color/text_primary" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Model Selection Dropdown -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:hint="Select Model"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            app:boxBackgroundColor="@color/surface">
+
+            <AutoCompleteTextView
+                android:id="@+id/modelDropdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
                 android:textColor="@color/text_primary" />
 
         </com.google.android.material.textfield.TextInputLayout>

@@ -43,7 +43,8 @@ class GroqClient(private val apiKey: String) {
     
     suspend fun sendMessage(
         userMessage: String,
-        conversationHistory: List<Message> = emptyList()
+        conversationHistory: List<Message> = emptyList(),
+        model: String = "mixtral-8x7b-32768"
     ): String {
         try {
             val messages = mutableListOf(
@@ -56,7 +57,7 @@ class GroqClient(private val apiKey: String) {
             messages.add(Message(role = "user", content = userMessage))
             
             val request = GroqRequest(
-                model = "mixtral-8x7b-32768",
+                model = model,
                 messages = messages,
                 temperature = 0.7f,
                 maxTokens = 1024

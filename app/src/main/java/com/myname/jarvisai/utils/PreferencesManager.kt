@@ -18,8 +18,14 @@ class PreferencesManager(context: Context) {
         private const val KEY_ELEVENLABS_API_KEY = "elevenlabs_api_key"
         private const val KEY_WAKE_WORD_ENABLED = "wake_word_enabled"
         private const val KEY_WAKE_WORD = "wake_word"
+        private const val KEY_AI_PROVIDER = "ai_provider"
+        private const val KEY_AI_MODEL = "ai_model"
         
         private const val DEFAULT_WAKE_WORD = "Hey Jarvis"
+        const val PROVIDER_GROQ = "Groq"
+        const val PROVIDER_OPENROUTER = "OpenRouter"
+        const val DEFAULT_GROQ_MODEL = "mixtral-8x7b-32768"
+        const val DEFAULT_OPENROUTER_MODEL = "openai/gpt-3.5-turbo"
     }
 
     // Groq API Key
@@ -64,6 +70,24 @@ class PreferencesManager(context: Context) {
 
     fun getWakeWord(): String {
         return prefs.getString(KEY_WAKE_WORD, DEFAULT_WAKE_WORD) ?: DEFAULT_WAKE_WORD
+    }
+
+    // AI Provider
+    fun setAiProvider(provider: String) {
+        prefs.edit().putString(KEY_AI_PROVIDER, provider).apply()
+    }
+
+    fun getAiProvider(): String {
+        return prefs.getString(KEY_AI_PROVIDER, PROVIDER_GROQ) ?: PROVIDER_GROQ
+    }
+
+    // AI Model
+    fun setAiModel(model: String) {
+        prefs.edit().putString(KEY_AI_MODEL, model).apply()
+    }
+
+    fun getAiModel(): String {
+        return prefs.getString(KEY_AI_MODEL, DEFAULT_GROQ_MODEL) ?: DEFAULT_GROQ_MODEL
     }
 
     // Clear all preferences
