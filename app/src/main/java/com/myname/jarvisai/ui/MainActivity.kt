@@ -97,23 +97,7 @@ class MainActivity : AppCompatActivity() {
     private fun initializeAI() {
         lifecycleScope.launch {
             try {
-                val provider = prefsManager.getAiProvider()
-                val groqKey = prefsManager.getGroqApiKey()
-                val openRouterKey = prefsManager.getOpenRouterApiKey()
                 val elevenLabsKey = prefsManager.getElevenLabsApiKey()
-
-                when (provider) {
-                    PreferencesManager.PROVIDER_GROQ -> {
-                        if (groqKey.isNotEmpty()) {
-                            groqClient = GroqClient(groqKey)
-                        }
-                    }
-                    PreferencesManager.PROVIDER_OPENROUTER -> {
-                        if (openRouterKey.isNotEmpty()) {
-                            openRouterClient = OpenRouterClient(openRouterKey)
-                        }
-                    }
-                }
 
                 if (elevenLabsKey.isNotEmpty()) {
                     elevenLabsClient = ElevenLabsClient(elevenLabsKey)
@@ -121,6 +105,16 @@ class MainActivity : AppCompatActivity() {
 
                 // Load avatar
                 avatarManager.loadAvatar(binding.avatarImage, "neutral")
+
+                // Show configured models count
+                val modelCount = prefsManager.getEnabledModelsByPriority().size
+                if (modelCount > 0) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "$modelCount AI model(s) ready",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
 
             } catch (e: Exception) {
                 Toast.makeText(this@MainActivity, "Error initializing AI", Toast.LENGTH_SHORT).show()
@@ -182,30 +176,33 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                val provider = prefsManager.getAiProvider()
-                val model = prefsManager.getAiModel()
-                
-                val response = withContext(Dispatchers.IO) {
-                    when (provider) {
-                        PreferencesManager.PROVIDER_GROQ -> {
-                            groqClient?.sendMessage(userMessage, model = model) 
-                                ?: "Please configure Groq API key in settings"
-                        }
-                        PreferencesManager.PROVIDER_OPENROUTER -> {
-                            openRouterClient?.sendMessage(userMessage, model = model)
-                                ?: "Please configure OpenRouter API key in settings"
-                        }
-                        else -> "Please configure your AI provider in settings"
-                    }
+                val result = withContext(Dispatchers.IO) {
+                    aiManager.sendMessage(userMessage)
                 }
 
-                binding.responseText.append("\n\nJarvis: $response")
-                
-                // Speak the response
-                speakResponse(response)
-                
-                // Update avatar mood
-                avatarManager.loadAvatar(binding.avatarImage, "speaking")
+                when (result) {
+                    is AIManager.Result.Success -> {
+                        val response = result.response
+                        val modelUsed = result.model.name
+                        
+                        binding.responseText.append("\n\nJarvis ($modelUsed): $response")
+                        
+                        // Speak the response
+                        speakResponse(response)
+                        
+                        // Update avatar mood
+                        avatarManager.loadAvatar(binding.avatarImage, "speaking")
+                    }
+                    is AIManager.Result.Error -> {
+                        binding.responseText.append("\n\nError: ${result.message}")
+                        Toast.makeText(
+                            this@MainActivity,
+                            "AI Error: ${result.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        updateUI(AssistantState.ERROR)
+                    }
+                }
 
             } catch (e: Exception) {
                 binding.responseText.text = "Error: ${e.message}"
@@ -268,11 +265,6 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         speechRecognizer?.destroy()
-    }
-}
-        }
-            }
-        }
     }
 
     override fun onDestroy() {
