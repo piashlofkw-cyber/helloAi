@@ -15,10 +15,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.myname.jarvisai.R
+import com.myname.jarvisai.ai.AIManager
 import com.myname.jarvisai.ai.AvatarManager
 import com.myname.jarvisai.ai.ElevenLabsClient
-import com.myname.jarvisai.ai.GroqClient
-import com.myname.jarvisai.ai.OpenRouterClient
 import com.myname.jarvisai.databinding.ActivityMainBinding
 import com.myname.jarvisai.models.AssistantState
 import com.myname.jarvisai.utils.PreferencesManager
@@ -272,4 +271,11 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         speechRecognizer?.destroy()
     }
+}
+onDestroy() {
+        super.onDestroy()
+        speechRecognizer?.destroy()
+    }
+}
+}
 }

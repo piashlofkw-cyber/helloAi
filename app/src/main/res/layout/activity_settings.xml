@@ -169,6 +169,17 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Model Manager Button -->
+        <Button
+            android:id="@+id/modelManagerButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="🤖 Manage AI Models"
+            android:textColor="@color/primary"
+            app:strokeColor="@color/primary" />
+
         <!-- Save Button -->
         <Button
             android:id="@+id/saveButton"

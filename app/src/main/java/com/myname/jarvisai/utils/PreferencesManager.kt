@@ -2,6 +2,7 @@ package com.myname.jarvisai.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.myname.jarvisai.models.ModelConfig
 
 class PreferencesManager(context: Context) {
 

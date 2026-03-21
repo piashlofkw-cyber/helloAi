@@ -75,6 +75,12 @@
             android:exported="false"
             android:parentActivityName=".ui.MainActivity" />
         
+        <!-- Model Manager Activity -->
+        <activity
+            android:name=".ui.ModelManagerActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.SettingsActivity" />
+        
         <!-- Call Screening Service -->
         <service
             android:name=".services.JarvisCallScreeningService"

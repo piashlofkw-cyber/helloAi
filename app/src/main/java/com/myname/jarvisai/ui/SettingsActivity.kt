@@ -97,6 +97,10 @@ class SettingsActivity : AppCompatActivity() {
             saveSettings()
         }
 
+        binding.modelManagerButton.setOnClickListener {
+            startActivity(Intent(this, ModelManagerActivity::class.java))
+        }
+
         binding.wakeWordSwitch.setOnCheckedChangeListener { _, isChecked ->
             binding.wakeWordInput.isEnabled = isChecked
         }
