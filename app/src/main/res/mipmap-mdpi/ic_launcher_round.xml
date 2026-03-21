@@ -13,9 +13,7 @@
         android:fillColor="@color/primary"
         android:pathData="M36,18c-9.9,0 -18,8.1 -18,18s8.1,18 18,18 18,-8.1 18,-18S45.9,18 36,18zM36,48c-6.6,0 -12,-5.4 -12,-12s5.4,-12 12,-12 12,5.4 12,12S42.6,48 36,48z"/>
     
-    <circle
+    <path
         android:fillColor="@color/accent"
-        android:cx="36"
-        android:cy="36"
-        android:radius="4"/>
+        android:pathData="M36,32a4,4 0,1 1,0 8,4 4,0 1,1 0,-8z"/>
 </vector>
