@@ -269,6 +269,3 @@ class MainActivity : AppCompatActivity() {
         speechRecognizer?.destroy()
     }
 }
-)
-    }
-}
