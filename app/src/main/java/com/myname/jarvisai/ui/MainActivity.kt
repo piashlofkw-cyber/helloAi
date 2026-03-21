@@ -18,6 +18,7 @@ import com.myname.jarvisai.R
 import com.myname.jarvisai.ai.AvatarManager
 import com.myname.jarvisai.ai.ElevenLabsClient
 import com.myname.jarvisai.ai.GroqClient
+import com.myname.jarvisai.ai.OpenRouterClient
 import com.myname.jarvisai.databinding.ActivityMainBinding
 import com.myname.jarvisai.models.AssistantState
 import com.myname.jarvisai.utils.PreferencesManager
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     
     private var speechRecognizer: SpeechRecognizer? = null
     private var groqClient: GroqClient? = null
+    private var openRouterClient: OpenRouterClient? = null
     private var elevenLabsClient: ElevenLabsClient? = null
     
     private var currentState = AssistantState.IDLE
@@ -263,15 +265,6 @@ class MainActivity : AppCompatActivity() {
                     micButton.isEnabled = true
                 }
             }
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        speechRecognizer?.destroy()
-    }
-}
-        }
         }
     }
 
