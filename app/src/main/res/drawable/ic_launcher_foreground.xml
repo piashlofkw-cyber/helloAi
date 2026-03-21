@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- AI Brain Icon -->
+    <path
+        android:fillColor="@color/primary"
+        android:pathData="M54,30c-13.2,0 -24,10.8 -24,24s10.8,24 24,24 24,-10.8 24,-24S67.2,30 54,30zM54,72c-9.9,0 -18,-8.1 -18,-18s8.1,-18 18,-18 18,8.1 18,18S63.9,72 54,72z"/>
+    
+    <!-- Neural connections -->
+    <path
+        android:strokeColor="@color/primary"
+        android:strokeWidth="2"
+        android:pathData="M40,40L50,50M58,50L68,40M40,68L50,58M58,58L68,68"/>
+    
+    <!-- Center circle -->
+    <circle
+        android:fillColor="@color/accent"
+        android:cx="54"
+        android:cy="54"
+        android:radius="6"/>
+</vector>
