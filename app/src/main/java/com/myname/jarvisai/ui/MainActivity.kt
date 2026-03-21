@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         prefsManager = PreferencesManager(this)
         avatarManager = AvatarManager(this)
+        aiManager = AIManager(this)
 
         initializeUI()
         checkPermissions()
@@ -265,5 +266,8 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         speechRecognizer?.destroy()
+    }
+}
+)
     }
 }
