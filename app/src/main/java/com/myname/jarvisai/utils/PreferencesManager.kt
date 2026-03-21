@@ -91,6 +91,61 @@ class PreferencesManager(context: Context) {
         return prefs.getString(KEY_AI_MODEL, DEFAULT_GROQ_MODEL) ?: DEFAULT_GROQ_MODEL
     }
 
+    // Model List Management
+    fun saveModelList(models: List<ModelConfig>) {
+        val json = ModelConfig.listToJson(models)
+        prefs.edit().putString(KEY_MODEL_LIST, json).apply()
+    }
+
+    fun getModelList(): List<ModelConfig> {
+        val json = prefs.getString(KEY_MODEL_LIST, null)
+        return if (json != null) {
+            ModelConfig.jsonToList(json)
+        } else {
+            // First time - return default free models
+            val defaults = ModelConfig.getDefaultFreeModels()
+            saveModelList(defaults)
+            defaults
+        }
+    }
+
+    fun addModel(model: ModelConfig) {
+        val currentList = getModelList().toMutableList()
+        currentList.add(model)
+        saveModelList(currentList)
+    }
+
+    fun updateModel(modelId: String, updatedModel: ModelConfig) {
+        val currentList = getModelList().toMutableList()
+        val index = currentList.indexOfFirst { it.id == modelId }
+        if (index >= 0) {
+            currentList[index] = updatedModel
+            saveModelList(currentList)
+        }
+    }
+
+    fun deleteModel(modelId: String) {
+        val currentList = getModelList().toMutableList()
+        currentList.removeAll { it.id == modelId }
+        saveModelList(currentList)
+    }
+
+    // Auto Fallback
+    fun setAutoFallbackEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_AUTO_FALLBACK, enabled).apply()
+    }
+
+    fun isAutoFallbackEnabled(): Boolean {
+        return prefs.getBoolean(KEY_AUTO_FALLBACK, true)
+    }
+
+    // Get enabled models sorted by priority
+    fun getEnabledModelsByPriority(): List<ModelConfig> {
+        return getModelList()
+            .filter { it.enabled }
+            .sortedBy { it.priority }
+    }
+
     // Clear all preferences
     fun clearAll() {
         prefs.edit().clear().apply()
