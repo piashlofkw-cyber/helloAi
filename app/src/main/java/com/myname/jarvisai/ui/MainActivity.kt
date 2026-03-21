@@ -32,8 +32,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var avatarManager: AvatarManager
     
     private var speechRecognizer: SpeechRecognizer? = null
-    private var groqClient: GroqClient? = null
-    private var openRouterClient: OpenRouterClient? = null
     private var elevenLabsClient: ElevenLabsClient? = null
     
     private var currentState = AssistantState.IDLE
@@ -263,6 +261,16 @@ class MainActivity : AppCompatActivity() {
                     voiceVisualizer.visibility = View.INVISIBLE
                     micButton.isEnabled = true
                 }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        speechRecognizer?.destroy()
+    }
+}
+        }
             }
         }
     }

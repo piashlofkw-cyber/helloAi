@@ -21,6 +21,8 @@ class PreferencesManager(context: Context) {
         private const val KEY_WAKE_WORD = "wake_word"
         private const val KEY_AI_PROVIDER = "ai_provider"
         private const val KEY_AI_MODEL = "ai_model"
+        private const val KEY_MODEL_LIST = "model_list"
+        private const val KEY_AUTO_FALLBACK = "auto_fallback_enabled"
         
         private const val DEFAULT_WAKE_WORD = "Hey Jarvis"
         const val PROVIDER_GROQ = "Groq"
