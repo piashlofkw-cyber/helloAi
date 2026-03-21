@@ -266,9 +266,4 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         speechRecognizer?.destroy()
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        speechRecognizer?.destroy()
-    }
 }
