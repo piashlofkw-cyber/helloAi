@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var prefsManager: PreferencesManager
     private lateinit var avatarManager: AvatarManager
+    private lateinit var aiManager: AIManager
     
     private var speechRecognizer: SpeechRecognizer? = null
     private var elevenLabsClient: ElevenLabsClient? = null
