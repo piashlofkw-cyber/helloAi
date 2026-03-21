@@ -93,3 +93,4 @@ lint/tmp/
 
 # Letta Code
 .letta/
+local.properties
