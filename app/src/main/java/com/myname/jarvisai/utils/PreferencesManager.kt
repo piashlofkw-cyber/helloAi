@@ -62,6 +62,15 @@ class PreferencesManager(context: Context) {
         return prefs.getString(KEY_ELEVENLABS_API_KEY, "") ?: ""
     }
 
+    // Gemini API Key
+    fun setGeminiApiKey(key: String) {
+        prefs.edit().putString("gemini_api_key", key).apply()
+    }
+
+    fun getGeminiApiKey(): String {
+        return prefs.getString("gemini_api_key", "") ?: ""
+    }
+
     // Wake Word Settings
     fun setWakeWordEnabled(enabled: Boolean) {
         prefs.edit().putBoolean(KEY_WAKE_WORD_ENABLED, enabled).apply()
