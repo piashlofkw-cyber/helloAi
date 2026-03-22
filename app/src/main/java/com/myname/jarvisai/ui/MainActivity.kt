@@ -204,31 +204,83 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                val result = withContext(Dispatchers.IO) {
-                    aiManager.sendMessage(userMessage)
+                // First, check if it's a command or conversation
+                val commandResult = withContext(Dispatchers.IO) {
+                    commandProcessor?.process(userMessage)
                 }
 
-                when (result) {
-                    is AIManager.Result.Success -> {
-                        val response = result.response
-                        val modelUsed = result.model.name
-                        
-                        binding.responseText.append("\n\nJarvis ($modelUsed): $response")
-                        
-                        // Speak the response
+                when (commandResult) {
+                    is com.myname.jarvisai.ai.CommandProcessor.ProcessResult.ActionCompleted -> {
+                        // Command executed successfully
+                        val response = commandResult.message
+                        binding.responseText.append("\n\nJarvis: $response ✅")
                         speakResponse(response)
-                        
-                        // Update avatar mood
-                        avatarManager.loadAvatar(binding.avatarImage, "speaking")
+                        updateUI(AssistantState.IDLE)
                     }
-                    is AIManager.Result.Error -> {
-                        binding.responseText.append("\n\nError: ${result.message}")
-                        Toast.makeText(
-                            this@MainActivity,
-                            "AI Error: ${result.message}",
-                            Toast.LENGTH_LONG
-                        ).show()
+                    
+                    is com.myname.jarvisai.ai.CommandProcessor.ProcessResult.ActionFailed -> {
+                        // Command failed
+                        val response = commandResult.message
+                        binding.responseText.append("\n\nJarvis: $response ❌")
+                        speakResponse(response)
                         updateUI(AssistantState.ERROR)
+                    }
+                    
+                    is com.myname.jarvisai.ai.CommandProcessor.ProcessResult.VisionRequest -> {
+                        // Vision request - would open camera
+                        val response = "Please take a photo first baby, then I can see it 💕"
+                        binding.responseText.append("\n\nJarvis: $response")
+                        speakResponse(response)
+                        updateUI(AssistantState.IDLE)
+                    }
+                    
+                    is com.myname.jarvisai.ai.CommandProcessor.ProcessResult.Conversation -> {
+                        // Regular conversation - send to AI
+                        val result = withContext(Dispatchers.IO) {
+                            aiManager.sendMessage(userMessage)
+                        }
+
+                        when (result) {
+                            is AIManager.Result.Success -> {
+                                val response = result.response
+                                val modelUsed = result.model.name
+                                
+                                binding.responseText.append("\n\nJarvis ($modelUsed): $response")
+                                
+                                // Speak the response
+                                speakResponse(response)
+                                
+                                // Update avatar mood
+                                avatarManager.loadAvatar(binding.avatarImage, "speaking")
+                            }
+                            is AIManager.Result.Error -> {
+                                binding.responseText.append("\n\nError: ${result.message}")
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    "AI Error: ${result.message}",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                updateUI(AssistantState.ERROR)
+                            }
+                        }
+                    }
+                    
+                    else -> {
+                        // Fallback to conversation
+                        val result = withContext(Dispatchers.IO) {
+                            aiManager.sendMessage(userMessage)
+                        }
+
+                        when (result) {
+                            is AIManager.Result.Success -> {
+                                binding.responseText.append("\n\nJarvis: ${result.response}")
+                                speakResponse(result.response)
+                            }
+                            is AIManager.Result.Error -> {
+                                binding.responseText.append("\n\nError: ${result.message}")
+                                updateUI(AssistantState.ERROR)
+                            }
+                        }
                     }
                 }
 
