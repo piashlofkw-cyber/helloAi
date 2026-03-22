@@ -170,16 +170,8 @@ class SettingsActivity : AppCompatActivity() {
             prefsManager.setReadSmsEnabled(readSmsSwitch.isChecked)
             prefsManager.setAutoResponseEnabled(liveTypingSwitch.isChecked)
             
-            // Start/stop continuous listening service
-            if (continuousListeningSwitch.isChecked) {
-                val serviceIntent = Intent(this@SettingsActivity, ContinuousListeningService::class.java)
-                serviceIntent.action = ContinuousListeningService.ACTION_START
-                startService(serviceIntent)
-            } else {
-                val serviceIntent = Intent(this@SettingsActivity, ContinuousListeningService::class.java)
-                serviceIntent.action = ContinuousListeningService.ACTION_STOP
-                startService(serviceIntent)
-            }
+            // Continuous listening is now handled in MainActivity
+            // No service needed here
 
             Toast.makeText(this@SettingsActivity, "Settings saved! Voice: $elevenLabsVoiceId", Toast.LENGTH_LONG).show()
             finish()

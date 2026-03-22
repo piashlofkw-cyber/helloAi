@@ -21,7 +21,10 @@ interface ElevenLabsApiService {
     ): ResponseBody
 }
 
-class ElevenLabsClient(private val apiKey: String) {
+class ElevenLabsClient(
+    private val apiKey: String,
+    private val voiceId: String = "21m00Tcm4TlvDq8ikWAM"
+) {
     
     companion object {
         // Default voice ID (you can change this to your preferred voice)
