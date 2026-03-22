@@ -220,6 +220,19 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
             putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
+            
+            // Multilingual support - Bangla + English + Banglish
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, "bn-BD") // Bengali (Bangladesh)
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "bn-BD")
+            
+            // Also support English fallback
+            val languages = arrayListOf("bn-BD", "en-US", "en-IN")
+            putExtra(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES, languages)
+            
+            // Enable better recognition for mixed languages
+            putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5)
+            
+            Log.d("MainActivity", "🎤 Speech Recognition configured for Bangla/English/Banglish")
         }
 
         speechRecognizer?.startListening(intent)
