@@ -71,6 +71,15 @@ class PreferencesManager(context: Context) {
         return prefs.getString("gemini_api_key", "") ?: ""
     }
 
+    // ElevenLabs Voice ID
+    fun setElevenLabsVoiceId(voiceId: String) {
+        prefs.edit().putString("elevenlabs_voice_id", voiceId).apply()
+    }
+
+    fun getElevenLabsVoiceId(): String {
+        return prefs.getString("elevenlabs_voice_id", "21m00Tcm4TlvDq8ikWAM") ?: "21m00Tcm4TlvDq8ikWAM" // Default: Rachel
+    }
+
     // Wake Word Settings
     fun setWakeWordEnabled(enabled: Boolean) {
         prefs.edit().putBoolean(KEY_WAKE_WORD_ENABLED, enabled).apply()

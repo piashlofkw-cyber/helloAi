@@ -85,6 +85,31 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- ElevenLabs Voice ID -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="ElevenLabs Voice ID"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/elevenlabsVoiceIdInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:textColor="@color/text_primary" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Default: Rachel (21m00Tcm4TlvDq8ikWAM)\nGet more: elevenlabs.io/app/voice-library"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
+
         <!-- Voice Settings Section -->
         <TextView
             android:layout_width="wrap_content"

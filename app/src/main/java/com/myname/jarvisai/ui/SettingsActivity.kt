@@ -91,11 +91,17 @@ class SettingsActivity : AppCompatActivity() {
             groqApiKeyInput.setText(prefsManager.getGroqApiKey())
             openrouterApiKeyInput.setText(prefsManager.getOpenRouterApiKey())
             elevenlabsApiKeyInput.setText(prefsManager.getElevenLabsApiKey())
+            elevenlabsVoiceIdInput.setText(prefsManager.getElevenLabsVoiceId())
             wakeWordSwitch.isChecked = prefsManager.isWakeWordEnabled()
             wakeWordInput.setText(prefsManager.getWakeWord())
             
             // Set AI provider
             aiProviderDropdown.setText(prefsManager.getAiProvider(), false)
+            
+            // Advanced features
+            continuousListeningSwitch.isChecked = prefsManager.isContinuousListeningEnabled()
+            readSmsSwitch.isChecked = prefsManager.isReadSmsEnabled()
+            liveTypingSwitch.isChecked = prefsManager.isAutoResponseEnabled()
         }
     }
 
@@ -118,6 +124,7 @@ class SettingsActivity : AppCompatActivity() {
             val groqKey = groqApiKeyInput.text.toString().trim()
             val openRouterKey = openrouterApiKeyInput.text.toString().trim()
             val elevenLabsKey = elevenlabsApiKeyInput.text.toString().trim()
+            val elevenLabsVoiceId = elevenlabsVoiceIdInput.text.toString().trim()
             val wakeWord = wakeWordInput.text.toString().trim()
             val wakeWordEnabled = wakeWordSwitch.isChecked
             val provider = aiProviderDropdown.text.toString()
@@ -146,12 +153,35 @@ class SettingsActivity : AppCompatActivity() {
             prefsManager.setGroqApiKey(groqKey)
             prefsManager.setOpenRouterApiKey(openRouterKey)
             prefsManager.setElevenLabsApiKey(elevenLabsKey)
+            prefsManager.setElevenLabsVoiceId(elevenLabsVoiceId)
             prefsManager.setWakeWordEnabled(wakeWordEnabled)
             prefsManager.setWakeWord(wakeWord)
             prefsManager.setAiProvider(provider)
             prefsManager.setAiModel(selectedModel)
+            
+            // Save personality mode
+            val personalityMode = personalityDropdown.text.toString()
+            if (personalityMode.isNotEmpty()) {
+                prefsManager.setPersonalityMode(personalityMode)
+            }
+            
+            // Save advanced features
+            prefsManager.setContinuousListening(continuousListeningSwitch.isChecked)
+            prefsManager.setReadSmsEnabled(readSmsSwitch.isChecked)
+            prefsManager.setAutoResponseEnabled(liveTypingSwitch.isChecked)
+            
+            // Start/stop continuous listening service
+            if (continuousListeningSwitch.isChecked) {
+                val serviceIntent = Intent(this@SettingsActivity, ContinuousListeningService::class.java)
+                serviceIntent.action = ContinuousListeningService.ACTION_START
+                startService(serviceIntent)
+            } else {
+                val serviceIntent = Intent(this@SettingsActivity, ContinuousListeningService::class.java)
+                serviceIntent.action = ContinuousListeningService.ACTION_STOP
+                startService(serviceIntent)
+            }
 
-            Toast.makeText(this@SettingsActivity, "Settings saved! Using $provider - $selectedModelName", Toast.LENGTH_LONG).show()
+            Toast.makeText(this@SettingsActivity, "Settings saved! Voice: $elevenLabsVoiceId", Toast.LENGTH_LONG).show()
             finish()
         }
     }

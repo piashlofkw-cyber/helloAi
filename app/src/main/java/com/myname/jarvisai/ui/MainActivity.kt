@@ -22,6 +22,7 @@ import com.myname.jarvisai.databinding.ActivityMainBinding
 import com.myname.jarvisai.models.AssistantState
 import com.myname.jarvisai.utils.PreferencesManager
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -34,8 +35,11 @@ class MainActivity : AppCompatActivity() {
     
     private var speechRecognizer: SpeechRecognizer? = null
     private var elevenLabsClient: ElevenLabsClient? = null
+    private var wakeWordDetector: com.myname.jarvisai.services.WakeWordDetector? = null
+    private var commandProcessor: com.myname.jarvisai.ai.CommandProcessor? = null
     
     private var currentState = AssistantState.IDLE
+    private var isContinuousMode = false
 
     companion object {
         private const val REQUEST_PERMISSIONS = 1001
@@ -100,9 +104,10 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val elevenLabsKey = prefsManager.getElevenLabsApiKey()
+                val voiceId = prefsManager.getElevenLabsVoiceId()
 
                 if (elevenLabsKey.isNotEmpty()) {
-                    elevenLabsClient = ElevenLabsClient(elevenLabsKey)
+                    elevenLabsClient = ElevenLabsClient(elevenLabsKey, voiceId)
                 }
 
                 // Load avatar
@@ -122,6 +127,19 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity, "Error initializing AI", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+    
+    private fun startContinuousListening() {
+        wakeWordDetector = com.myname.jarvisai.services.WakeWordDetector(this) {
+            // Wake word detected - start full listening
+            runOnUiThread {
+                Toast.makeText(this, "🎤 Listening...", Toast.LENGTH_SHORT).show()
+                startListening()
+            }
+        }
+        wakeWordDetector?.start()
+        
+        Toast.makeText(this, "🎤 Always listening mode ON", Toast.LENGTH_LONG).show()
     }
 
     private fun startListening() {
@@ -150,6 +168,14 @@ class MainActivity : AppCompatActivity() {
                 val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                 if (!matches.isNullOrEmpty()) {
                     processUserInput(matches[0])
+                }
+                
+                // Auto restart if continuous mode
+                if (isContinuousMode) {
+                    lifecycleScope.launch {
+                        delay(3000) // Wait 3 seconds after response
+                        startListening()
+                    }
                 }
             }
 
@@ -265,6 +291,60 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        super.onDestroy()
+        speechRecognizer?.destroy()
+        wakeWordDetector?.stop()
+    }
+}
+{
+        super.onDestroy()
+        speechRecognizer?.destroy()
+    }
+}
+xtToSpeech.QUEUE_FLUSH, null, null)
+            }
+        }
+    }
+
+    private fun updateUI(state: AssistantState) {
+        currentState = state
+        binding.apply {
+            when (state) {
+                AssistantState.IDLE -> {
+                    statusText.text = getString(R.string.tap_to_speak)
+                    voiceVisualizer.visibility = View.INVISIBLE
+                    micButton.isEnabled = true
+                }
+                AssistantState.LISTENING -> {
+                    statusText.text = getString(R.string.listening)
+                    voiceVisualizer.visibility = View.VISIBLE
+                    micButton.isEnabled = true
+                }
+                AssistantState.PROCESSING -> {
+                    statusText.text = getString(R.string.processing)
+                    voiceVisualizer.visibility = View.INVISIBLE
+                    micButton.isEnabled = false
+                }
+                AssistantState.SPEAKING -> {
+                    statusText.text = getString(R.string.speaking)
+                    voiceVisualizer.visibility = View.VISIBLE
+                    micButton.isEnabled = false
+                }
+                AssistantState.ERROR -> {
+                    statusText.text = "Error occurred"
+                    voiceVisualizer.visibility = View.INVISIBLE
+                    micButton.isEnabled = true
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        speechRecognizer?.destroy()
+    }
+}
+{
         super.onDestroy()
         speechRecognizer?.destroy()
     }
