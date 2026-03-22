@@ -49,9 +49,11 @@ class CartesiaClient(
             val selectedVoiceId = customVoiceId ?: voiceId
             
             Log.d(TAG, "🎤 Generating speech with Cartesia...")
+            Log.d(TAG, "   API Key: ${apiKey.take(15)}...")
             Log.d(TAG, "   Model: $modelId")
-            Log.d(TAG, "   Voice: $selectedVoiceId")
+            Log.d(TAG, "   Voice ID: $selectedVoiceId")
             Log.d(TAG, "   Text: ${text.take(50)}...")
+            Log.d(TAG, "   URL: $API_BASE_URL/tts/bytes")
             
             val requestBody = JSONObject().apply {
                 put("model_id", modelId)
