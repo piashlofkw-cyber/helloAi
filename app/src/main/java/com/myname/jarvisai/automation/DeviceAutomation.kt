@@ -228,8 +228,3 @@ class DeviceAutomation(private val context: Context) {
         object NotAutomation : CommandResult()
     }
 }
-CommandResult()
-        data class NeedAccessibility(val message: String) : CommandResult()
-        object NotAutomation : CommandResult()
-    }
-}
