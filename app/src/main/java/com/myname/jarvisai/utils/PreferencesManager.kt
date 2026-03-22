@@ -23,6 +23,10 @@ class PreferencesManager(context: Context) {
         private const val KEY_AI_MODEL = "ai_model"
         private const val KEY_MODEL_LIST = "model_list"
         private const val KEY_AUTO_FALLBACK = "auto_fallback_enabled"
+        private const val KEY_PERSONALITY_MODE = "personality_mode"
+        private const val KEY_CONTINUOUS_LISTENING = "continuous_listening"
+        private const val KEY_READ_SMS_ENABLED = "read_sms_enabled"
+        private const val KEY_AUTO_RESPONSE = "auto_response_enabled"
         
         private const val DEFAULT_WAKE_WORD = "Hey Jarvis"
         const val PROVIDER_GROQ = "Groq"

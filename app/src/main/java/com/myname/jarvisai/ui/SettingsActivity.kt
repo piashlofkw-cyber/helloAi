@@ -44,7 +44,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun setupDropdowns() {
         // Personality Mode dropdown
-        val personalities = PersonalityMode.values().map { it.displayName }
+        val personalities = listOf("Girlfriend 💕", "Professional 💼", "Funny Friend 😄", "Motivator 🔥")
         val personalityAdapter = ArrayAdapter(this, R.layout.dropdown_item, personalities)
         binding.personalityDropdown.setAdapter(personalityAdapter)
         binding.personalityDropdown.setText(prefsManager.getPersonalityMode(), false)
@@ -152,21 +152,6 @@ class SettingsActivity : AppCompatActivity() {
             prefsManager.setAiModel(selectedModel)
 
             Toast.makeText(this@SettingsActivity, "Settings saved! Using $provider - $selectedModelName", Toast.LENGTH_LONG).show()
-            finish()
-        }
-    }
-}
-   if (continuousListeningSwitch.isChecked) {
-                val serviceIntent = Intent(this@SettingsActivity, ContinuousListeningService::class.java)
-                serviceIntent.action = ContinuousListeningService.ACTION_START
-                startService(serviceIntent)
-            } else {
-                val serviceIntent = Intent(this@SettingsActivity, ContinuousListeningService::class.java)
-                serviceIntent.action = ContinuousListeningService.ACTION_STOP
-                startService(serviceIntent)
-            }
-
-            Toast.makeText(this@SettingsActivity, "Settings saved! Personality: $personalityMode", Toast.LENGTH_LONG).show()
             finish()
         }
     }
