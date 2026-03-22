@@ -7,6 +7,7 @@ import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.Settings
 import android.telephony.SmsManager
+import android.util.Log
 import android.widget.Toast
 import java.net.URLEncoder
 
