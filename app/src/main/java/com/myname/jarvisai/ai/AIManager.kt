@@ -82,15 +82,19 @@ class AIManager(private val context: Context) {
         val apiKey = model.apiKey.ifEmpty { prefsManager.getGroqApiKey() }
         
         if (apiKey.isEmpty()) {
-            Log.w(TAG, "No Groq API key configured")
-            return null
+            Log.w(TAG, "❌ No Groq API key configured for ${model.name}")
+            throw Exception("No Groq API key configured")
         }
+
+        Log.d(TAG, "📤 Sending to Groq: ${model.name} (${model.modelId})")
 
         val client = groqClients.getOrPut(model.id) {
             GroqClient(apiKey)
         }
 
-        return client.sendMessage(userMessage, conversationHistory, model.modelId)
+        val response = client.sendMessage(userMessage, conversationHistory, model.modelId)
+        Log.i(TAG, "✅ Success with Groq: ${model.name}")
+        return response
     }
 
     private suspend fun sendViaOpenRouter(
@@ -101,15 +105,19 @@ class AIManager(private val context: Context) {
         val apiKey = model.apiKey.ifEmpty { prefsManager.getOpenRouterApiKey() }
         
         if (apiKey.isEmpty()) {
-            Log.w(TAG, "No OpenRouter API key configured")
-            return null
+            Log.w(TAG, "❌ No OpenRouter API key configured for ${model.name}")
+            throw Exception("No OpenRouter API key configured")
         }
+
+        Log.d(TAG, "📤 Sending to OpenRouter: ${model.name} (${model.modelId})")
 
         val client = openRouterClients.getOrPut(model.id) {
             OpenRouterClient(apiKey)
         }
 
-        return client.sendMessage(userMessage, conversationHistory, model.modelId)
+        val response = client.sendMessage(userMessage, conversationHistory, model.modelId)
+        Log.i(TAG, "✅ Success with OpenRouter: ${model.name}")
+        return response
     }
 
     /**

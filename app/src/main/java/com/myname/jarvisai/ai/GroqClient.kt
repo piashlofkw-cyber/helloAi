@@ -46,34 +46,28 @@ class GroqClient(private val apiKey: String) {
         conversationHistory: List<Message> = emptyList(),
         model: String = "mixtral-8x7b-32768"
     ): String {
-        try {
-            val messages = mutableListOf(
-                Message(
-                    role = "system",
-                    content = "You are Jarvis, an advanced AI assistant. Be helpful, concise, and friendly."
-                )
+        val messages = mutableListOf(
+            Message(
+                role = "system",
+                content = "You are Jarvis, an advanced AI assistant. Be helpful, concise, and friendly."
             )
-            messages.addAll(conversationHistory)
-            messages.add(Message(role = "user", content = userMessage))
-            
-            val request = GroqRequest(
-                model = model,
-                messages = messages,
-                temperature = 0.7f,
-                maxTokens = 1024
-            )
-            
-            val response = service.chatCompletion(
-                authorization = "Bearer $apiKey",
-                request = request
-            )
-            
-            return response.choices.firstOrNull()?.message?.content 
-                ?: "I apologize, but I couldn't generate a response."
-                
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return "Error communicating with AI: ${e.message}"
-        }
+        )
+        messages.addAll(conversationHistory)
+        messages.add(Message(role = "user", content = userMessage))
+        
+        val request = GroqRequest(
+            model = model,
+            messages = messages,
+            temperature = 0.7f,
+            maxTokens = 1024
+        )
+        
+        val response = service.chatCompletion(
+            authorization = "Bearer $apiKey",
+            request = request
+        )
+        
+        return response.choices.firstOrNull()?.message?.content 
+            ?: throw Exception("Empty response from Groq")
     }
 }

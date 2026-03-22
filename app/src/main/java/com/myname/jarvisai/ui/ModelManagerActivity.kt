@@ -43,7 +43,8 @@ class ModelManagerActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         adapter = ModelsAdapter(
             onItemClick = { model -> showEditDialog(model) },
-            onSwitchChanged = { model, enabled -> toggleModel(model, enabled) }
+            onSwitchChanged = { model, enabled -> toggleModel(model, enabled) },
+            onTestClick = { model -> testModel(model) }
         )
         binding.modelsRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.modelsRecyclerView.adapter = adapter
@@ -204,6 +205,16 @@ class ModelsAdapter(
 
                 modelSwitch.setOnCheckedChangeListener { _, isChecked ->
                     onSwitchChanged(model, isChecked)
+                }
+                
+                // Test button (if exists in layout)
+                try {
+                    val testBtn = binding.root.findViewById<android.widget.ImageButton>(com.myname.jarvisai.R.id.testButton)
+                    testBtn?.setOnClickListener {
+                        onTestClick(model)
+                    }
+                } catch (e: Exception) {
+                    // Test button not in layout, skip
                 }
             }
         }
