@@ -97,8 +97,21 @@ class SettingsActivity : AppCompatActivity() {
             openrouterApiKeyInput.setText(prefsManager.getOpenRouterApiKey())
             elevenlabsApiKeyInput.setText(prefsManager.getElevenLabsApiKey())
             elevenlabsVoiceIdInput.setText(prefsManager.getElevenLabsVoiceId())
+            
+            // Load Cartesia settings
+            cartesiaApiKeyInput.setText(prefsManager.getCartesiaApiKey())
+            cartesiaVoiceIdInput.setText(prefsManager.getCartesiaVoiceId())
+            
             wakeWordSwitch.isChecked = prefsManager.isWakeWordEnabled()
             wakeWordInput.setText(prefsManager.getWakeWord())
+            
+            // Set voice provider
+            val voiceProvider = when (prefsManager.getVoiceProvider()) {
+                "cartesia" -> "Cartesia AI (Fast)"
+                "elevenlabs" -> "ElevenLabs (Premium)"
+                else -> "Android TTS (Free)"
+            }
+            voiceProviderDropdown.setText(voiceProvider, false)
             
             // Set AI provider
             aiProviderDropdown.setText(prefsManager.getAiProvider(), false)
