@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     
     private var speechRecognizer: SpeechRecognizer? = null
     private var elevenLabsClient: ElevenLabsClient? = null
+    private var cartesiaClient: com.myname.jarvisai.ai.CartesiaClient? = null
     private var wakeWordDetector: com.myname.jarvisai.services.WakeWordDetector? = null
     private var commandProcessor: com.myname.jarvisai.ai.CommandProcessor? = null
     

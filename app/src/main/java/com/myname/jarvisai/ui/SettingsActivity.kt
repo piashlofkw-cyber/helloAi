@@ -43,6 +43,11 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun setupDropdowns() {
+        // Voice Provider dropdown
+        val voiceProviders = listOf("Android TTS (Free)", "Cartesia AI (Fast)", "ElevenLabs (Premium)")
+        val voiceAdapter = ArrayAdapter(this, R.layout.dropdown_item, voiceProviders)
+        binding.voiceProviderDropdown.setAdapter(voiceAdapter)
+        
         // Personality Mode dropdown
         val personalities = listOf("Girlfriend 💕", "Professional 💼", "Funny Friend 😄", "Motivator 🔥")
         val personalityAdapter = ArrayAdapter(this, R.layout.dropdown_item, personalities)
@@ -125,9 +130,17 @@ class SettingsActivity : AppCompatActivity() {
             val openRouterKey = openrouterApiKeyInput.text.toString().trim()
             val elevenLabsKey = elevenlabsApiKeyInput.text.toString().trim()
             val elevenLabsVoiceId = elevenlabsVoiceIdInput.text.toString().trim()
+            val cartesiaKey = cartesiaApiKeyInput.text.toString().trim()
+            val cartesiaVoiceId = cartesiaVoiceIdInput.text.toString().trim()
             val wakeWord = wakeWordInput.text.toString().trim()
             val wakeWordEnabled = wakeWordSwitch.isChecked
             val provider = aiProviderDropdown.text.toString()
+            val voiceProviderText = voiceProviderDropdown.text.toString()
+            val voiceProvider = when {
+                voiceProviderText.contains("Cartesia") -> "cartesia"
+                voiceProviderText.contains("ElevenLabs") -> "elevenlabs"
+                else -> "android"
+            }
 
             // Validate inputs
             if (groqKey.isEmpty() && openRouterKey.isEmpty()) {
@@ -154,6 +167,9 @@ class SettingsActivity : AppCompatActivity() {
             prefsManager.setOpenRouterApiKey(openRouterKey)
             prefsManager.setElevenLabsApiKey(elevenLabsKey)
             prefsManager.setElevenLabsVoiceId(elevenLabsVoiceId)
+            prefsManager.setCartesiaApiKey(cartesiaKey)
+            prefsManager.setCartesiaVoiceId(cartesiaVoiceId)
+            prefsManager.setVoiceProvider(voiceProvider)
             prefsManager.setWakeWordEnabled(wakeWordEnabled)
             prefsManager.setWakeWord(wakeWord)
             prefsManager.setAiProvider(provider)
@@ -169,6 +185,16 @@ class SettingsActivity : AppCompatActivity() {
             prefsManager.setContinuousListening(continuousListeningSwitch.isChecked)
             prefsManager.setReadSmsEnabled(readSmsSwitch.isChecked)
             prefsManager.setAutoResponseEnabled(liveTypingSwitch.isChecked)
+            
+            // Continuous listening is now handled in MainActivity
+            // No service needed here
+
+            Toast.makeText(this@SettingsActivity, "Settings saved! Voice: $elevenLabsVoiceId", Toast.LENGTH_LONG).show()
+            finish()
+        }
+    }
+}
+toResponseEnabled(liveTypingSwitch.isChecked)
             
             // Continuous listening is now handled in MainActivity
             // No service needed here

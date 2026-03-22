@@ -85,12 +85,71 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Voice Provider Selection -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Voice Provider"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+            <AutoCompleteTextView
+                android:id="@+id/voiceProviderDropdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textColor="@color/text_primary" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Cartesia API Key (NEW!) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Cartesia API Key (Ultra-Fast Voice!)"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/cartesiaApiKeyInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:textColor="@color/text_primary" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Cartesia Voice ID -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="Cartesia Voice ID"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/cartesiaVoiceIdInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:textColor="@color/text_primary" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="🔥 CARTESIA VOICES (ULTRA FAST!):\n\n💕 Sweet Lady: 79a125e8-cd45-4c13-8a67-188112f4dd22\n🎙️ Calm Lady: 156fb8d2-335b-4950-9cb3-a2d33befec77\n👨 Barbershop Man: a0e99841-438c-4a64-b679-ae501e7d6091\n🇬🇧 British Man: 63ff761f-c1e8-414b-b969-d1833d1c870c\n\nGet API Key: play.cartesia.ai/keys\nBrowse voices: play.cartesia.ai/voices"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
+
         <!-- ElevenLabs Voice ID -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:hint="ElevenLabs Voice ID"
+            android:hint="ElevenLabs Voice ID (Optional)"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText

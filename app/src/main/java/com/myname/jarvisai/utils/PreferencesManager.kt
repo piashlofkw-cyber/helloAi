@@ -80,6 +80,33 @@ class PreferencesManager(context: Context) {
         return prefs.getString("elevenlabs_voice_id", "21m00Tcm4TlvDq8ikWAM") ?: "21m00Tcm4TlvDq8ikWAM" // Default: Rachel
     }
 
+    // Cartesia API Key
+    fun setCartesiaApiKey(key: String) {
+        prefs.edit().putString("cartesia_api_key", key).apply()
+    }
+
+    fun getCartesiaApiKey(): String {
+        return prefs.getString("cartesia_api_key", "") ?: ""
+    }
+
+    // Cartesia Voice ID
+    fun setCartesiaVoiceId(voiceId: String) {
+        prefs.edit().putString("cartesia_voice_id", voiceId).apply()
+    }
+
+    fun getCartesiaVoiceId(): String {
+        return prefs.getString("cartesia_voice_id", "79a125e8-cd45-4c13-8a67-188112f4dd22") ?: "79a125e8-cd45-4c13-8a67-188112f4dd22" // Default: Sweet Lady
+    }
+
+    // Voice Provider Selection
+    fun setVoiceProvider(provider: String) {
+        prefs.edit().putString("voice_provider", provider).apply()
+    }
+
+    fun getVoiceProvider(): String {
+        return prefs.getString("voice_provider", "android") ?: "android" // android, elevenlabs, cartesia
+    }
+
     // Wake Word Settings
     fun setWakeWordEnabled(enabled: Boolean) {
         prefs.edit().putBoolean(KEY_WAKE_WORD_ENABLED, enabled).apply()
