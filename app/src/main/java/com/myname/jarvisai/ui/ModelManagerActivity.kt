@@ -43,8 +43,7 @@ class ModelManagerActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         adapter = ModelsAdapter(
             onItemClick = { model -> showEditDialog(model) },
-            onSwitchChanged = { model, enabled -> toggleModel(model, enabled) },
-            onTestClick = { model -> testModel(model) }
+            onSwitchChanged = { model, enabled -> toggleModel(model, enabled) }
         )
         binding.modelsRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.modelsRecyclerView.adapter = adapter
