@@ -205,16 +205,6 @@ class ModelsAdapter(
                 modelSwitch.setOnCheckedChangeListener { _, isChecked ->
                     onSwitchChanged(model, isChecked)
                 }
-                
-                // Test button (if exists in layout)
-                try {
-                    val testBtn = binding.root.findViewById<android.widget.ImageButton>(com.myname.jarvisai.R.id.testButton)
-                    testBtn?.setOnClickListener {
-                        onTestClick(model)
-                    }
-                } catch (e: Exception) {
-                    // Test button not in layout, skip
-                }
             }
         }
     }
