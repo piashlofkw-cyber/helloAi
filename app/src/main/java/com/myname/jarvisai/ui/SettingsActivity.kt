@@ -167,18 +167,29 @@ class SettingsActivity : AppCompatActivity() {
             prefsManager.setOpenRouterApiKey(openRouterKey)
             prefsManager.setElevenLabsApiKey(elevenLabsKey)
             prefsManager.setElevenLabsVoiceId(elevenLabsVoiceId)
+            
+            // Save Cartesia settings
             prefsManager.setCartesiaApiKey(cartesiaKey)
             prefsManager.setCartesiaVoiceId(cartesiaVoiceId)
             prefsManager.setVoiceProvider(voiceProvider)
+            
+            android.util.Log.d("SettingsActivity", "✅ Saved Cartesia Key: ${prefsManager.getCartesiaApiKey().take(10)}...")
+            android.util.Log.d("SettingsActivity", "✅ Saved Cartesia Voice: ${prefsManager.getCartesiaVoiceId()}")
+            android.util.Log.d("SettingsActivity", "✅ Saved Voice Provider: ${prefsManager.getVoiceProvider()}")
+            
             prefsManager.setWakeWordEnabled(wakeWordEnabled)
             prefsManager.setWakeWord(wakeWord)
             prefsManager.setAiProvider(provider)
             prefsManager.setAiModel(selectedModel)
             
             // Save personality mode
-            val personalityMode = personalityDropdown.text.toString()
-            if (personalityMode.isNotEmpty()) {
-                prefsManager.setPersonalityMode(personalityMode)
+            try {
+                val personalityMode = personalityDropdown.text.toString()
+                if (personalityMode.isNotEmpty()) {
+                    prefsManager.setPersonalityMode(personalityMode)
+                }
+            } catch (e: Exception) {
+                // Personality dropdown might not exist, skip
             }
             
             // Save advanced features
@@ -186,11 +197,23 @@ class SettingsActivity : AppCompatActivity() {
             prefsManager.setReadSmsEnabled(readSmsSwitch.isChecked)
             prefsManager.setAutoResponseEnabled(liveTypingSwitch.isChecked)
             
-            // Continuous listening is now handled in MainActivity
-            // No service needed here
+            // Show detailed save confirmation
+            val message = buildString {
+                append("✅ Settings Saved!\n\n")
+                append("Voice: $voiceProvider\n")
+                if (voiceProvider == "cartesia") {
+                    append("Cartesia Voice ID: ${cartesiaVoiceId.take(20)}...\n")
+                    append("API Key: ${if (cartesiaKey.isNotEmpty()) "Set ✓" else "Not set ✗"}\n")
+                }
+                append("\nContinuous Mode: ${if (continuousListeningSwitch.isChecked) "ON" else "OFF"}")
+            }
 
-            Toast.makeText(this@SettingsActivity, "Settings saved! Voice: $elevenLabsVoiceId", Toast.LENGTH_LONG).show()
-            finish()
+            Toast.makeText(this@SettingsActivity, message, Toast.LENGTH_LONG).show()
+            
+            // Don't finish immediately - wait 2 seconds so user can read toast
+            binding.root.postDelayed({
+                finish()
+            }, 2000)
         }
     }
 }
