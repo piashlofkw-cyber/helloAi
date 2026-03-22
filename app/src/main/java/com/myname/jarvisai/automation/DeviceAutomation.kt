@@ -16,11 +16,16 @@ import java.net.URLEncoder
  */
 class DeviceAutomation(private val context: Context) {
 
+    companion object {
+        private const val TAG = "DeviceAutomation"
+    }
+
     /**
      * Process voice command and execute action
      */
     fun processCommand(command: String): CommandResult {
         val lowerCommand = command.lowercase()
+        Log.d(TAG, "📱 Processing command: $command")
         
         return when {
             // App launching
@@ -219,6 +224,11 @@ class DeviceAutomation(private val context: Context) {
     sealed class CommandResult {
         data class Success(val message: String) : CommandResult()
         data class Error(val message: String) : CommandResult()
+        data class NeedAccessibility(val message: String) : CommandResult()
+        object NotAutomation : CommandResult()
+    }
+}
+CommandResult()
         data class NeedAccessibility(val message: String) : CommandResult()
         object NotAutomation : CommandResult()
     }

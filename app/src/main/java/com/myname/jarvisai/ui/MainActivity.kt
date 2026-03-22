@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
+import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
@@ -167,15 +168,9 @@ class MainActivity : AppCompatActivity() {
             override fun onResults(results: Bundle?) {
                 val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                 if (!matches.isNullOrEmpty()) {
-                    processUserInput(matches[0])
-                }
-                
-                // Auto restart if continuous mode
-                if (isContinuousMode) {
-                    lifecycleScope.launch {
-                        delay(3000) // Wait 3 seconds after response
-                        startListening()
-                    }
+                    val userInput = matches[0]
+                    Log.d("MainActivity", "🎤 Heard: $userInput")
+                    processUserInput(userInput)
                 }
             }
 
@@ -291,21 +286,45 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private var tts: android.speech.tts.TextToSpeech? = null
+    
     private fun speakResponse(text: String) {
         lifecycleScope.launch {
             updateUI(AssistantState.SPEAKING)
             
             try {
-                withContext(Dispatchers.IO) {
-                    elevenLabsClient?.synthesizeSpeech(text)
-                }
-                // Audio playback would happen here
+                // Use Android TTS (simple and reliable)
+                speakWithAndroidTTS(text)
+                
+                // Wait for speech to complete
+                delay(text.length * 50L)
                 
             } catch (e: Exception) {
-                Toast.makeText(this@MainActivity, "TTS Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Log.e("MainActivity", "TTS Error: ${e.message}")
             } finally {
                 updateUI(AssistantState.IDLE)
+                
+                // Auto restart listening in continuous mode
+                if (isContinuousMode) {
+                    delay(2000)
+                    startListening()
+                }
             }
+        }
+    }
+    
+    private fun speakWithAndroidTTS(text: String) {
+        if (tts == null) {
+            tts = android.speech.tts.TextToSpeech(this) { status ->
+                if (status == android.speech.tts.TextToSpeech.SUCCESS) {
+                    tts?.language = java.util.Locale.US
+                    tts?.setPitch(1.1f)
+                    tts?.setSpeechRate(0.9f)
+                    tts?.speak(text, android.speech.tts.TextToSpeech.QUEUE_FLUSH, null, "jarvis")
+                }
+            }
+        } else {
+            tts?.speak(text, android.speech.tts.TextToSpeech.QUEUE_FLUSH, null, "jarvis")
         }
     }
 
