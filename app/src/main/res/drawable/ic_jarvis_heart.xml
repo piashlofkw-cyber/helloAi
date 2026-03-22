@@ -27,10 +27,14 @@
         android:strokeColor="@color/primary"
         android:strokeWidth="2"/>
     
-    <!-- Energy particles -->
-    <circle android:fillColor="@color/accent" android:cx="60" android:cy="60" android:radius="3"/>
-    <circle android:fillColor="@color/accent" android:cx="140" android:cy="60" android:radius="3"/>
-    <circle android:fillColor="@color/accent" android:cx="60" android:cy="140" android:radius="3"/>
-    <circle android:fillColor="@color/accent" android:cx="140" android:cy="140" android:radius="3"/>
+    <!-- Energy particles (using path instead of circle) -->
+    <path android:fillColor="@color/accent" 
+        android:pathData="M60,60m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0z"/>
+    <path android:fillColor="@color/accent" 
+        android:pathData="M140,60m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0z"/>
+    <path android:fillColor="@color/accent" 
+        android:pathData="M60,140m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0z"/>
+    <path android:fillColor="@color/accent" 
+        android:pathData="M140,140m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0z"/>
     
 </vector>
