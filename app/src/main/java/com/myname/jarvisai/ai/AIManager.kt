@@ -34,6 +34,11 @@ class AIManager(private val context: Context) {
             return Result.Error("No models configured. Please add models in Model Manager.")
         }
 
+        // Detect language and create multilingual prompt
+        val multilingualAI = MultilingualAI()
+        val detectedLanguage = multilingualAI.detectLanguage(userMessage)
+        Log.d(TAG, "🌐 Detected language: $detectedLanguage for message: ${userMessage.take(30)}...")
+
         // Try each model in priority order
         for ((index, model) in enabledModels.withIndex()) {
             try {

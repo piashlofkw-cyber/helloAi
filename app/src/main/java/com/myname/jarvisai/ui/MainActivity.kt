@@ -465,13 +465,39 @@ class MainActivity : AppCompatActivity() {
         if (tts == null) {
             tts = android.speech.tts.TextToSpeech(this) { status ->
                 if (status == android.speech.tts.TextToSpeech.SUCCESS) {
-                    tts?.language = java.util.Locale.US
+                    // Auto-detect language and set appropriate voice
+                    val hasBangla = text.any { it in '\u0980'..'\u09FF' }
+                    
+                    if (hasBangla) {
+                        // Set Bangla language
+                        val bengaliLocale = java.util.Locale("bn", "BD")
+                        val result = tts?.setLanguage(bengaliLocale)
+                        if (result == android.speech.tts.TextToSpeech.LANG_MISSING_DATA ||
+                            result == android.speech.tts.TextToSpeech.LANG_NOT_SUPPORTED) {
+                            Log.w("MainActivity", "Bangla TTS not supported, using English")
+                            tts?.language = java.util.Locale.US
+                        } else {
+                            Log.i("MainActivity", "🇧🇩 Using Bangla TTS voice")
+                        }
+                    } else {
+                        // Use English
+                        tts?.language = java.util.Locale.US
+                    }
+                    
                     tts?.setPitch(1.1f)
                     tts?.setSpeechRate(0.9f)
                     tts?.speak(text, android.speech.tts.TextToSpeech.QUEUE_FLUSH, null, "jarvis")
                 }
             }
         } else {
+            // Auto-detect language for existing TTS
+            val hasBangla = text.any { it in '\u0980'..'\u09FF' }
+            if (hasBangla) {
+                val bengaliLocale = java.util.Locale("bn", "BD")
+                tts?.setLanguage(bengaliLocale)
+            } else {
+                tts?.language = java.util.Locale.US
+            }
             tts?.speak(text, android.speech.tts.TextToSpeech.QUEUE_FLUSH, null, "jarvis")
         }
     }

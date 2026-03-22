@@ -2,6 +2,9 @@
 <resources>
     <string name="app_name">My Jarvis AI</string>
     
+    <!-- Multilingual Support Indicator -->
+    <string name="multilingual_supported">🌐 বাংলা | English | Banglish</string>
+    
     <!-- Main Screen -->
     <string name="welcome_message">Hello, I\'m Jarvis</string>
     <string name="listening">Listening…</string>
@@ -50,6 +53,10 @@
     <string name="notification_listening">Jarvis is listening</string>
     
     <!-- Avatar -->
+    <string name="avatar_loading">Loading avatar…</string>
+    <string name="avatar_error">Failed to load avatar</string>
+</resources>
+ Avatar -->
     <string name="avatar_loading">Loading avatar…</string>
     <string name="avatar_error">Failed to load avatar</string>
 </resources>
