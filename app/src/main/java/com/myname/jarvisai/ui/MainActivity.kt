@@ -105,11 +105,42 @@ class MainActivity : AppCompatActivity() {
     private fun initializeAI() {
         lifecycleScope.launch {
             try {
+                val voiceProvider = prefsManager.getVoiceProvider()
+                val cartesiaKey = prefsManager.getCartesiaApiKey()
+                val cartesiaVoiceId = prefsManager.getCartesiaVoiceId()
                 val elevenLabsKey = prefsManager.getElevenLabsApiKey()
-                val voiceId = prefsManager.getElevenLabsVoiceId()
+                
+                Log.d("MainActivity", "🎤 Initializing Voice System...")
+                Log.d("MainActivity", "   Voice Provider: $voiceProvider")
+                Log.d("MainActivity", "   Cartesia Key: ${if (cartesiaKey.isEmpty()) "EMPTY" else "Present (${cartesiaKey.length} chars)"}")
+                Log.d("MainActivity", "   Cartesia Voice: ${if (cartesiaVoiceId.isEmpty()) "EMPTY" else cartesiaVoiceId}")
 
+                // Initialize Cartesia if key present
+                if (cartesiaKey.isNotEmpty() && cartesiaVoiceId.isNotEmpty()) {
+                    try {
+                        cartesiaClient = com.myname.jarvisai.ai.CartesiaClient(cartesiaKey, cartesiaVoiceId)
+                        Log.i("MainActivity", "✅ Cartesia AI initialized!")
+                        Log.i("MainActivity", "   Voice ID: $cartesiaVoiceId")
+                    } catch (e: Exception) {
+                        Log.e("MainActivity", "❌ Cartesia init error: ${e.message}")
+                    }
+                } else {
+                    Log.w("MainActivity", "⚠️ Cartesia not initialized (missing key or voice ID)")
+                }
+
+                // Initialize ElevenLabs if key present  
                 if (elevenLabsKey.isNotEmpty()) {
-                    elevenLabsClient = ElevenLabsClient(elevenLabsKey, voiceId)
+                    try {
+                        elevenLabsClient = ElevenLabsClient(elevenLabsKey)
+                        Log.i("MainActivity", "✅ ElevenLabs initialized!")
+                    } catch (e: Exception) {
+                        Log.e("MainActivity", "❌ ElevenLabs init error: ${e.message}")
+                    }
+                }
+                
+                Log.i("MainActivity", "🔊 Active Voice Provider: $voiceProvider")
+                if (voiceProvider == "cartesia" && cartesiaClient == null) {
+                    Log.e("MainActivity", "⚠️ WARNING: Cartesia selected but not initialized!")
                 }
 
                 // Load avatar
@@ -117,15 +148,22 @@ class MainActivity : AppCompatActivity() {
 
                 // Show configured models count
                 val modelCount = prefsManager.getEnabledModelsByPriority().size
+                val voiceStatus = when {
+                    voiceProvider == "cartesia" && cartesiaClient != null -> "Cartesia Voice Ready! ⚡"
+                    voiceProvider == "elevenlabs" && elevenLabsClient != null -> "ElevenLabs Voice Ready!"
+                    else -> "Android TTS"
+                }
+                
                 if (modelCount > 0) {
                     Toast.makeText(
                         this@MainActivity,
-                        "$modelCount AI model(s) ready",
-                        Toast.LENGTH_SHORT
+                        "$modelCount AI model(s) | $voiceStatus",
+                        Toast.LENGTH_LONG
                     ).show()
                 }
 
             } catch (e: Exception) {
+                Log.e("MainActivity", "Error initializing AI: ${e.message}", e)
                 Toast.makeText(this@MainActivity, "Error initializing AI", Toast.LENGTH_SHORT).show()
             }
         }
@@ -294,14 +332,66 @@ class MainActivity : AppCompatActivity() {
             updateUI(AssistantState.SPEAKING)
             
             try {
-                // Use Android TTS (simple and reliable)
-                speakWithAndroidTTS(text)
+                val voiceProvider = prefsManager.getVoiceProvider()
+                
+                Log.d("MainActivity", "🔊 Speaking with: $voiceProvider")
+                Log.d("MainActivity", "   Text: ${text.take(50)}...")
+                Log.d("MainActivity", "   Cartesia client: ${if (cartesiaClient != null) "READY ✅" else "NULL ❌"}")
+                
+                when (voiceProvider) {
+                    "cartesia" -> {
+                        if (cartesiaClient == null) {
+                            Log.e("MainActivity", "❌ Cartesia client is NULL! Using TTS fallback")
+                            speakWithAndroidTTS(text)
+                        } else {
+                            Log.d("MainActivity", "📡 Calling Cartesia API...")
+                            val audioBytes = withContext(Dispatchers.IO) {
+                                try {
+                                    cartesiaClient?.textToSpeech(text)
+                                } catch (e: Exception) {
+                                    Log.e("MainActivity", "❌ Cartesia API error: ${e.message}", e)
+                                    null
+                                }
+                            }
+                            
+                            if (audioBytes != null && audioBytes.isNotEmpty()) {
+                                Log.i("MainActivity", "✅ Got ${audioBytes.size} bytes, playing PCM audio...")
+                                playPCMAudio(audioBytes)
+                            } else {
+                                Log.w("MainActivity", "❌ Cartesia returned null/empty, using TTS")
+                                speakWithAndroidTTS(text)
+                            }
+                        }
+                    }
+                    "elevenlabs" -> {
+                        if (elevenLabsClient == null) {
+                            Log.e("MainActivity", "❌ ElevenLabs client is NULL! Using TTS fallback")
+                            speakWithAndroidTTS(text)
+                        } else {
+                            val audioBytes = withContext(Dispatchers.IO) {
+                                elevenLabsClient?.synthesizeSpeech(text)
+                            }
+                            
+                            if (audioBytes != null) {
+                                playMP3Audio(audioBytes)
+                            } else {
+                                Log.w("MainActivity", "ElevenLabs failed, using TTS")
+                                speakWithAndroidTTS(text)
+                            }
+                        }
+                    }
+                    else -> {
+                        Log.d("MainActivity", "🔊 Using Android TTS")
+                        speakWithAndroidTTS(text)
+                    }
+                }
                 
                 // Wait for speech to complete
                 delay(text.length * 50L)
                 
             } catch (e: Exception) {
-                Log.e("MainActivity", "TTS Error: ${e.message}")
+                Log.e("MainActivity", "Voice Error: ${e.message}", e)
+                speakWithAndroidTTS(text)
             } finally {
                 updateUI(AssistantState.IDLE)
                 
@@ -311,6 +401,50 @@ class MainActivity : AppCompatActivity() {
                     startListening()
                 }
             }
+        }
+    }
+    
+    private fun playPCMAudio(audioBytes: ByteArray) {
+        try {
+            Log.d("MainActivity", "🔊 Initializing AudioTrack for PCM playback...")
+            val audioTrack = android.media.AudioTrack(
+                android.media.AudioManager.STREAM_MUSIC,
+                16000, // Sample rate
+                android.media.AudioFormat.CHANNEL_OUT_MONO,
+                android.media.AudioFormat.ENCODING_PCM_16BIT,
+                audioBytes.size,
+                android.media.AudioTrack.MODE_STATIC
+            )
+            
+            audioTrack.write(audioBytes, 0, audioBytes.size)
+            audioTrack.play()
+            
+            Log.i("MainActivity", "✅ Playing Cartesia audio (${audioBytes.size} bytes)")
+        } catch (e: Exception) {
+            Log.e("MainActivity", "❌ PCM playback error: ${e.message}", e)
+            speakWithAndroidTTS("Audio playback error")
+        }
+    }
+    
+    private fun playMP3Audio(audioBytes: ByteArray) {
+        try {
+            val tempFile = java.io.File.createTempFile("jarvis_voice", ".mp3", cacheDir)
+            tempFile.writeBytes(audioBytes)
+            
+            val mediaPlayer = android.media.MediaPlayer()
+            mediaPlayer.setDataSource(tempFile.absolutePath)
+            mediaPlayer.prepare()
+            mediaPlayer.start()
+            
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+                tempFile.delete()
+            }
+            
+            Log.i("MainActivity", "✅ Playing ElevenLabs audio")
+        } catch (e: Exception) {
+            Log.e("MainActivity", "❌ MP3 playback error: ${e.message}", e)
+            speakWithAndroidTTS("Audio playback error")
         }
     }
     
