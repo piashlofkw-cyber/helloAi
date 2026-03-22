@@ -194,13 +194,3 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 }
-toResponseEnabled(liveTypingSwitch.isChecked)
-            
-            // Continuous listening is now handled in MainActivity
-            // No service needed here
-
-            Toast.makeText(this@SettingsActivity, "Settings saved! Voice: $elevenLabsVoiceId", Toast.LENGTH_LONG).show()
-            finish()
-        }
-    }
-}
