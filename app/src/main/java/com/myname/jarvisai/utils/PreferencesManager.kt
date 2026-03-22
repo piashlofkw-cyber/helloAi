@@ -148,6 +148,42 @@ class PreferencesManager(context: Context) {
             .sortedBy { it.priority }
     }
 
+    // Personality Mode
+    fun setPersonalityMode(mode: String) {
+        prefs.edit().putString(KEY_PERSONALITY_MODE, mode).apply()
+    }
+
+    fun getPersonalityMode(): String {
+        return prefs.getString(KEY_PERSONALITY_MODE, "Girlfriend 💕") ?: "Girlfriend 💕"
+    }
+
+    // Continuous Listening
+    fun setContinuousListening(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_CONTINUOUS_LISTENING, enabled).apply()
+    }
+
+    fun isContinuousListeningEnabled(): Boolean {
+        return prefs.getBoolean(KEY_CONTINUOUS_LISTENING, false)
+    }
+
+    // Read SMS Aloud
+    fun setReadSmsEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_READ_SMS_ENABLED, enabled).apply()
+    }
+
+    fun isReadSmsEnabled(): Boolean {
+        return prefs.getBoolean(KEY_READ_SMS_ENABLED, false)
+    }
+
+    // Auto Response
+    fun setAutoResponseEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_AUTO_RESPONSE, enabled).apply()
+    }
+
+    fun isAutoResponseEnabled(): Boolean {
+        return prefs.getBoolean(KEY_AUTO_RESPONSE, true)
+    }
+
     // Clear all preferences
     fun clearAll() {
         prefs.edit().clear().apply()

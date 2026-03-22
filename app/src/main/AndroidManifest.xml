@@ -120,6 +120,22 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
+
+        <!-- SMS Reader Service (Reads aloud) -->
+        <receiver
+            android:name=".services.SmsReaderService"
+            android:exported="true">
+            <intent-filter android:priority="998">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Continuous Listening Service -->
+        <service
+            android:name=".services.ContinuousListeningService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="microphone" />
         
     </application>
 

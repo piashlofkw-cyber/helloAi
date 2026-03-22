@@ -122,6 +122,100 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Personality Mode Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="🎭 Personality Mode"
+            android:textColor="@color/primary"
+            android:textSize="20sp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Select Personality"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            app:boxBackgroundColor="@color/surface">
+
+            <AutoCompleteTextView
+                android:id="@+id/personalityDropdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textColor="@color/text_primary" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Advanced Features Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="✨ Advanced Features"
+            android:textColor="@color/primary"
+            android:textSize="20sp" />
+
+        <!-- Continuous Listening -->
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/continuousListeningSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="🎤 Continuous Listening (Always On)"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Jarvis will always listen and respond - like talking to a girlfriend!"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp" />
+
+        <!-- Read SMS Aloud -->
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/readSmsSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="📨 Read SMS Aloud"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Jarvis will read incoming messages to you"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp" />
+
+        <!-- Live Typing Effect -->
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/liveTypingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:checked="true"
+            android:text="💬 Live Typing Effect"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="See responses appear word by word - like real conversation"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp" />
+
         <!-- Model Selection Section -->
         <TextView
             android:layout_width="wrap_content"
